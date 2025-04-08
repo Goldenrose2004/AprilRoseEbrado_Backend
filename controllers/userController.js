@@ -44,48 +44,11 @@ exports.addUser = async (req, res) => {
         const user = await User.create({ name, email, password: hashedPassword });
         
         res.status(201).json({ message: 'User added successfully', user });
+        console.log("This is a demo for add user api");
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
-// ✅ Update User
-exports.updateUser = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { name, email, password } = req.body;
 
-        const user = await User.findByPk(id);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
 
-        const updatedData = {
-            name: name || user.name,
-            email: email || user.email,
-            password: password ? await bcrypt.hash(password, 10) : user.password,
-        };
-
-        await user.update(updatedData);
-        res.json({ message: 'User updated successfully', user });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-// ✅ Delete User
-exports.deleteUser = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        const user = await User.findByPk(id);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        await user.destroy();
-        res.json({ message: 'User deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
